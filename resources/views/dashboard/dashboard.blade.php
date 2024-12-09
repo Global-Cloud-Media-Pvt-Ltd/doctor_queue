@@ -110,24 +110,33 @@
 </div>
 
 <script>
-    function queueDlt(id){
-        if (confirm('Are you sure you want to delete this queue?')) {
-        $.ajax({
-        url: '/queue-delete/' + id,
-        type: 'DELETE',
-        data: {
-        _token: '{{ csrf_token() }}',
-        },
-        success: function(response) {
-        alert('Doctor Queue deleted successfully!');
-        location.reload(); // Reload the page to reflect changes
-        },
-        error: function(response) {
-        alert('Error deleting post.');
-        }
-        });
-        }
-    }
+    $(document).ready(function() {
+    // When the button is clicked
+    $("#docQueueButton").click(function() {
+    // Show the modal
+    $('#docQueue').modal('show');
+    });
+    });
+
+
+//    function queueDlt(id){
+//         if (confirm('Are you sure you want to delete this queue?')) {
+//         $.ajax({
+//         url: '/queue-delete/' + id,
+//         type: 'get',
+//         data: {
+//         _token: '{{ csrf_token() }}',
+//         },
+//         success: function(response) {
+//         alert('Doctor Queue deleted successfully!');
+//         location.reload(); // Reload the page to reflect changes
+//         },
+//         error: function(response) {
+//         alert('Error deleting post.');
+//         }
+//         });
+//         }
+//     }
 </script>
 
 @endsection
