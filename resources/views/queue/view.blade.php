@@ -26,53 +26,17 @@
     <div class="min-h-screen bg-gray-100">
         <div class="row mt-2">
             <div class="col-md-5 ms-1">
-                <div class="card ml-2 mb-1">
-                    <div class="card-body">
-                        <div class="row">
-                            {{-- <div class="col-md-4">
-                                <h5>Room No</h5>
-                            </div>
-                            <div class="col-md-4">
-                                <h5>Doctor Name</h5>
-                            </div>
-                            <div class="col-md-4">
-                                <h5>Doctor Special</h5>
-                            </div> --}}
-                        </div>
-                    </div>
-                </div>
                 <div id="latestQueue">
 
                 </div>
-                {{-- @foreach ($queues as $queue)
-                <div class="card ml-2 mb-1">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-12 text-center" style=" color: red;  font-size: 20px">
-                                <b>{{$queue->room_no}}</b>
-                            </div>
-                            <div class="col-md-12 text-center" style=" color: red; font-size: 20px">
-                                <b>{{$queue->doctor_name}}</b>
-                            </div>
-                            <div class="col-md-12 text-center" style=" color: red; font-size: 20px">
-                                <b>{{$queue->doctor_special}}</b>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                @endforeach --}}
+
             </div>
             <div class="col-md-7">
-                <h1 class="text-center">
-                    {{ now()->format('Y-m-d H:i:s') }}
+                <h1 class="text-center" id="nowTime">
+
                 </h1>
-                <div class="row mt-2">
-                    <div class="col-md-11">
-                        <div class="embed-responsive embed-responsive-16by9">
-                            <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/tgbNymZ7vqY"
-                                allowfullscreen></iframe>
-                        </div>
-                    </div>
+                <div class="row mt-2" id="getIframe">
+
                 </div>
             </div>
 
@@ -114,6 +78,63 @@
                 fetchTableData();
             }, refreshTime);
         });
+
+        $(document).ready(function () {
+        
+        function fetchIframe() {
+        $.get({
+        url: '/get-iframe',
+        method: 'GET',
+        success: function (response) {
+        $("#getIframe").html(response)
+        },
+        error: function(xhr, status, error) {
+        console.error('Error fetching data:', error);
+        }
+        });
+        }
+        
+        fetchIframe();
+        
+        // var refreshTime = 5000;
+        
+        // setInterval(function () {
+        // fetchIframe();
+        // }, refreshTime);
+
+        });
+    </script>
+
+    <script>
+        var refreshTime = 1000;
+        
+        // Function to update the current time
+        function updateTime() {
+       
+            var currentTime = new Date(); // Get the current date and time
+            
+            // Extract date components
+            var year = currentTime.getFullYear();
+            var month = (currentTime.getMonth() + 1).toString().padStart(2, '0'); // Months are 0-based, so add 1
+            var day = currentTime.getDate().toString().padStart(2, '0');
+            
+            // Extract time components
+            var hours = currentTime.getHours().toString().padStart(2, '0');
+            var minutes = currentTime.getMinutes().toString().padStart(2, '0');
+            var seconds = currentTime.getSeconds().toString().padStart(2, '0');
+            
+            // Format date and time as "YYYY-MM-DD HH:MM:SS"
+            var dateTimeString = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+
+        // Update the content of the #current-time element with the formatted time
+        $('#nowTime').text(dateTimeString);
+        }
+        
+        // Update the time every second (1000 milliseconds)
+        setInterval(updateTime, 1000);
+        
+        // Initial time display when the page loads
+        updateTime();
     </script>
 </body>
 

@@ -7,7 +7,7 @@
         <div class="col-md-6">
             <h2>Doctor Queues</h2>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-6 d-flex">
             <form action="{{ route('logout') }}" method="POST">
                 @csrf
                 <button type="submit" class="btn btn-primary">Logout</button>
@@ -15,7 +15,10 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-12 mt-5 mb-3 d-flex">
+        <div class="col-md-10 mt-5 mb-3 d-flex">
+            <button id="iframeButton" class="btn btn-primary ml-auto">Add Iframe</button>
+        </div>
+        <div class="col-md-2 mt-5 mb-3 d-flex">
             <button id="docQueueButton" class="btn btn-warning ml-auto">Add Doctor Queue</button>
         </div>
         @if(session('success'))
@@ -24,7 +27,7 @@
         </div>
         @endif
         <div class="col-md-12">
-            <table class="table">
+            <table class="table" id="docQueueTable">
                 <thead>
                     <tr>
                         <th scope="col">#</th>
@@ -45,7 +48,11 @@
                         <td>{{$queue->doctor_name}}</td>
                         <td>{{$queue->doctor_special}}</td>
                         <td>
-                            <button class="btn btn-warning">Update</button>
+                            <form action="{{ route('get.single.queue') }}">
+                                @csrf
+                                <button type="submit" class="btn btn-warning">Update</button>
+                            </form>
+
                             <button onclick="queueDlt({{$queue->id}})" class="btn btn-danger">Delete</button>
                         </td>
                     </tr>
@@ -71,7 +78,7 @@
                 <form action="{{ route('add.doctor.queue') }}" method="POST">
                     @csrf
                     <div>
-                        <label for="email">Room NO</label>
+                        <label for="email">Room No</label>
                         <input type="text" id="roomNo" name="roomNo" class="form-control" value="{{ old('roomNo') }}">
                         @error('roomNo')
                         <strong class="text-danger">{{ $message }}</strong>
@@ -95,9 +102,6 @@
                         <strong class="text-danger">{{ $message }}</strong>
                         @enderror
                     </div>
-                    {{-- <div class="form-group row mt-2">
-                        <button class="btn btn-primary" type="submit">Add Queue</button>
-                    </div> --}}
 
             </div>
             <div class="modal-footer">
@@ -109,34 +113,157 @@
     </div>
 </div>
 
+
+<!-- Modal -->
+<div class="modal fade" id="updDocQueue" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Update Doctor Queue</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ route('add.doctor.queue') }}" method="POST">
+                    @csrf
+                    <div>
+                        <label for="email">Room No</label>
+                        <input type="text" id="roomNo" name="roomNo" class="form-control" value="{{ old('roomNo') }}">
+                        @error('roomNo')
+                        <strong class="text-danger">{{ $message }}</strong>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="email">Doctor Name</label>
+                        <input type="text" id="docName" name="docName" class="form-control"
+                            value="{{ old('docName') }}">
+                        @error('docName')
+                        <strong class="text-danger">{{ $message }}</strong>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="email">Doctor Special</label>
+                        <input type="text" id="docspecial" name="docspecial" class="form-control"
+                            value="{{ old('docspecial') }}">
+                        @error('docspecial')
+                        <strong class="text-danger">{{ $message }}</strong>
+                        @enderror
+                    </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button class="btn btn-primary" type="submit">Add Queue</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="iframe" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add Iframe</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ route('add.iframe') }}" method="POST">
+                    @csrf
+                    <div>
+                        <label for="email">Iframe</label>
+                        <input type="text" id="iframe" name="iframe" class="form-control" value="{{ old('iframe') }}">
+                        @error('iframe')
+                        <strong class="text-danger">{{ $message }}</strong>
+                        @enderror
+                    </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button class="btn btn-primary" type="submit">Add Iframe</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <script>
     $(document).ready(function() {
-    // When the button is clicked
-    $("#docQueueButton").click(function() {
-    // Show the modal
+
+    $("#docQueueButton").click(function() {    
     $('#docQueue').modal('show');
     });
+
+    });
+
+    $(document).ready(function() {
+    
+    $("#iframeButton").click(function() {
+    $('#iframe').modal('show');
+    });
+    
     });
 
 
-//    function queueDlt(id){
-//         if (confirm('Are you sure you want to delete this queue?')) {
-//         $.ajax({
-//         url: '/queue-delete/' + id,
-//         type: 'get',
-//         data: {
-//         _token: '{{ csrf_token() }}',
-//         },
-//         success: function(response) {
-//         alert('Doctor Queue deleted successfully!');
-//         location.reload(); // Reload the page to reflect changes
-//         },
-//         error: function(response) {
-//         alert('Error deleting post.');
-//         }
-//         });
-//         }
-//     }
+   function queueDlt(id){
+        if (confirm('Are you sure you want to delete this queue?')) {
+        $.ajax({
+        url: '/queue-delete/' + id,
+        type: 'delete',
+        data: {
+        _token: '{{ csrf_token() }}',
+        },
+        success: function(response) {
+        alert('Doctor Queue deleted successfully!');
+        location.reload();
+        },
+        error: function(response) {
+        alert('Error deleting post.');
+        }
+        });
+        }
+    }
+
+    function updateQueue(id){
+        // $('#updDocQueue').modal('show');
+        $.ajax({
+            type: "get",
+            url: "/get-single-queue/"+id,
+            data: {
+            _token: '{{ csrf_token() }}',
+            },
+            success: function (response) {
+                console.log(response);
+            }
+        });
+    }
+</script>
+
+
+<script>
+    // Initialize DataTable
+            $(document).ready(function() {
+               
+                $('#docQueueTable').DataTable({
+                "paging": true,
+                "searching": true,
+                "ordering": true,
+                "lengthMenu": [5, 10, 15, 20], 
+                "dom": 'Bfrtip',
+                "buttons": [
+                'copy', 'csv', 'excel', 'pdf', 'print' 
+                ]
+                });
+            });
 </script>
 
 @endsection
