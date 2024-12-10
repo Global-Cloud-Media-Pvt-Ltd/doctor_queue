@@ -16,6 +16,7 @@ class Doctor extends Model
     ];
 
     protected $visible = [
+        'id',
         'room_no',
         'doctor_name',
         'doctor_special'

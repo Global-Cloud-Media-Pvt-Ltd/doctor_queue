@@ -96,11 +96,11 @@
         
         fetchIframe();
         
-        // var refreshTime = 5000;
+        var refreshTime = 30000;
         
-        // setInterval(function () {
-        // fetchIframe();
-        // }, refreshTime);
+        setInterval(function () {
+        fetchIframe();
+        }, refreshTime);
 
         });
     </script>

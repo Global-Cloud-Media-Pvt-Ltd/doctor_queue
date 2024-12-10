@@ -35,7 +35,7 @@ class DoctorController extends Controller
 
     public function dashboard()
     {
-        $queues = Doctor::all();
+        $queues = Doctor::orderBy('id', 'desc')->get();
 
         return view('dashboard.dashboard', compact('queues'));
     }
@@ -55,7 +55,23 @@ class DoctorController extends Controller
 
     public function getSingleQueue($id)
     {
-        $getQueue = Doctor::find($id)->get();
+        $getQueue = Doctor::where(['id' => $id])->get();
+
+        return $getQueue;
+    }
+
+    public function updateDocQueue(Request $request)
+    {
+        $updateQueue = Doctor::where(['id' => $request->upId])
+            ->update([
+                'doctor_name' => $request->docName,
+                'doctor_special' => $request->docspecial,
+                'room_no' => $request->roomNo,
+            ]);
+
+        if ($updateQueue) {
+            return redirect()->route('dashboard')->with('success', 'Doctor Queue updated successfully!');
+        }
     }
 
     public function deleteQueue($id)

@@ -5,9 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DoctorController;
 
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [AuthController::class, 'showLoginForm']);
 
 Route::get('queue-view', [DoctorController::class, 'queueView'])->name('queue.view');
 
@@ -26,7 +24,8 @@ Route::get('get-iframe', [DoctorController::class, 'getIframe'])->name('get.ifra
 Route::middleware('auth')->group(function () {
     Route::get('dashboard', [DoctorController::class, 'dashboard'])->name('dashboard');
     Route::post('add-doctor-queue', [DoctorController::class, 'addDoctorQueue'])->name('add.doctor.queue');
-    Route::get('get-single-queue', [DoctorController::class, 'getSingleQueue'])->name('get.single.queue');
+    Route::post('update-doctor-queue', [DoctorController::class, 'updateDocQueue'])->name('update.doctor.queue');
+    Route::get('get-single-queue/{id}', [DoctorController::class, 'getSingleQueue'])->name('get.single.queue');
     Route::delete('queue-delete/{id}', [DoctorController::class, 'deleteQueue']);
 
     Route::post('add-iframe', [DoctorController::class, 'addIframe'])->name('add.iframe');
